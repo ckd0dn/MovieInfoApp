@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Gravity
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.moviesearchapp.ApiClient
@@ -16,7 +17,7 @@ import retrofit2.*
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var binding : ActivityMainBinding
+    private lateinit var binding: ActivityMainBinding
     private lateinit var movieService: MovieService
     private lateinit var movieAdapter: MovieAdapter
     private var page = 1
@@ -46,57 +47,73 @@ class MainActivity : AppCompatActivity() {
         }
 
         //페이징 처리
-        binding.movieRecyclerView.addOnScrollListener(object:RecyclerView.OnScrollListener() {
+        binding.movieRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
 
                 val totalCount = linearLayoutManager.itemCount
                 val lastVisiblePosition = linearLayoutManager.findLastVisibleItemPosition()
 
-                if (lastVisiblePosition >= (totalCount - 1) && haseMore){
+                if (lastVisiblePosition >= (totalCount - 1) && haseMore) {
                     page += 1
-                    listMovies(page)
+                    listMovies(page, 2)
                 }
             }
         })
 
-            //검색 버튼 클릭
+        //검색 버튼 클릭
         binding.button.setOnClickListener {
-            listMovies(page)
+            listMovies(page, 1)
         }
 
 
     }
 
-    private fun  listMovies(page: Int) {
-        movieService.listMovies( title = binding.editText.text.toString(), page = page.toString()).enqueue(object:Callback<Movie>{
-            override fun onResponse(call: Call<Movie>, response: Response<Movie>) {
+    private fun listMovies(page: Int, type: Int) {
+        movieService.listMovies(title = binding.editText.text.toString(), page = page.toString())
+            .enqueue(object : Callback<Movie> {
+                override fun onResponse(call: Call<Movie>, response: Response<Movie>) {
 
-                if (response.body()?.response == "True") {
+
                     haseMore = response.body()?.search?.count() == 10
-                    movieAdapter.submitList( movieAdapter.currentList + response.body()?.search.orEmpty())
-                }
-                else {
-                    if (response.body()?.error == "Too many results."){
-                        val t = Toast.makeText(this@MainActivity, "검색된 영화가 너무 많습니다", Toast.LENGTH_SHORT)
-                        t.setGravity(Gravity.CENTER,0,0)
-                        t.show()
+                    if (type == 1)
+                        movieAdapter.submitList(response.body()?.search.orEmpty())
+                    if (type == 2)
+                        movieAdapter.submitList(movieAdapter.currentList + response.body()?.search.orEmpty())
+
+
+                    if(response.body()?.response == "True"){
+                        binding.notFoundView.isVisible = false
+
+                    }else{
+                        binding.notFoundView.isVisible = true
+                        if (response.body()?.error == "Too many results.") {
+                            val t =
+                                Toast.makeText(this@MainActivity, "검색된 영화가 너무 많습니다", Toast.LENGTH_SHORT)
+                            t.setGravity(Gravity.CENTER, 0, 0)
+                            t.show()
+                        } else if (response.body()?.error == "Movie not found!") {
+
+                            val t = Toast.makeText(
+                                this@MainActivity,
+                                "검색된 영화를 찾지 못했습니다",
+                                Toast.LENGTH_SHORT
+                            )
+                            t.setGravity(Gravity.CENTER, 0, 0)
+                            t.show()
+
+                        }
                     }
 
-                    if (response.body()?.error == "Movie not found!"){
-                        val t = Toast.makeText(this@MainActivity, "검색된 영화가 없습니다", Toast.LENGTH_SHORT)
-                        t.setGravity(Gravity.CENTER,0,0)
-                        t.show()
-                    }
+
 
                 }
-            }
 
-            override fun onFailure(call: Call<Movie>, t: Throwable) {
-                t.printStackTrace()
+                override fun onFailure(call: Call<Movie>, t: Throwable) {
+                    t.printStackTrace()
 
-            }
-        })
+                }
+            })
     }
 
 }
