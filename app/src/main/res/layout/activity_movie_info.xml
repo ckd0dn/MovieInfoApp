@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="20dp"
+    android:background="@color/black">
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_marginTop="100dp"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+    </ImageView>
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/white"
+        android:textSize="24dp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/imageView"
+        tools:text="어둠 속으로" />
+
+    <TextView
+        android:id="@+id/released"
+        style="@style/GrayText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/title"
+        tools:text="공개일자: 15 Jun 2005" />
+
+    <TextView
+        android:id="@+id/runtime"
+        style="@style/GrayText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        app:layout_constraintBottom_toBottomOf="@id/released"
+        app:layout_constraintStart_toEndOf="@id/released"
+        app:layout_constraintTop_toTopOf="@id/released"
+        tools:text="방영시간: 140 min" />
+
+    <TextView
+        android:id="@+id/genre"
+        style="@style/GrayText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/runtime"
+        tools:text="장르: Action, Crime, Drama" />
+
+    <TextView
+        android:id="@+id/director"
+        style="@style/GrayText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/genre"
+        tools:text="제작: Christopher Nolan" />
+
+    <TextView
+        android:id="@+id/actors"
+        style="@style/GrayText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/director"
+        tools:text="출연: Christian Bale, Michael Caine, Ken Watanabe" />
+
+    <TextView
+        android:id="@+id/plot"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/actors"
+        tools:text="After training with his mentor, Batman begins his fight to free crime-ridden Gotham City from corruption." />
+
+    <TextView
+        android:id="@+id/metascore"
+        style="@style/GrayText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/plot"
+        tools:text="metascore: 70" />
+
+    <ImageView
+        android:id="@+id/rankImage"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:layout_marginLeft="20dp"
+        android:src="@drawable/ic_baseline_star_24"
+        app:layout_constraintBottom_toBottomOf="@id/metascore"
+        app:layout_constraintStart_toEndOf="@id/metascore">
+
+    </ImageView>
+
+    <TextView
+        android:id="@+id/rating"
+        style="@style/GrayText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"
+        app:layout_constraintBottom_toBottomOf="@id/rankImage"
+        app:layout_constraintStart_toEndOf="@id/rankImage"
+        tools:text="rating: 8.2" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
