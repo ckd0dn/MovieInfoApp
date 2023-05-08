@@ -1,10 +1,19 @@
 package com.example.moviesearchapp.activity
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Gravity
+import android.view.KeyEvent
+import android.view.MotionEvent
+import android.view.View.OnTouchListener
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
+import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -15,6 +24,7 @@ import com.example.moviesearchapp.model.Movie
 import com.example.moviesearchapp.network.MovieService
 import retrofit2.*
 
+
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
@@ -23,8 +33,11 @@ class MainActivity : AppCompatActivity() {
     private var page = 1
     private var haseMore = true
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        installSplashScreen()
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -32,11 +45,13 @@ class MainActivity : AppCompatActivity() {
         movieService = ApiClient.retrofit.create(MovieService::class.java)
 
         //어댑터
-        movieAdapter = MovieAdapter {
-            val intent = Intent(this@MainActivity, MovieActivity::class.java)
-            intent.putExtra("id", it.id)
-            startActivity(intent)
-        }
+        movieAdapter = MovieAdapter()
+
+//        {
+//            val intent = Intent(this@MainActivity, MovieActivity::class.java)
+//            intent.putExtra("id", it.id)
+//            startActivity(intent)
+//        }
 
         val linearLayoutManager = LinearLayoutManager(this@MainActivity)
 
@@ -62,9 +77,22 @@ class MainActivity : AppCompatActivity() {
         })
 
         //검색 버튼 클릭
-        binding.button.setOnClickListener {
-            listMovies(page, 1)
-        }
+        binding.editText.setOnEditorActionListener(object : TextView.OnEditorActionListener {
+            override fun onEditorAction(v: TextView?, actionId: Int, event: KeyEvent?): Boolean {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    listMovies(page, 1)
+                    val imm: InputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                    imm.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
+                    return true
+                }
+                return false
+            }
+
+        })
+
+//        binding.button.setOnClickListener {
+//            listMovies(page, 1)
+//        }
 
 
     }
